@@ -9,19 +9,18 @@ class CurrentWeatherRepositoryImpl extends CurrentWeatherRepository{
   GetIt.I.get<WeatherApiInterface>(instanceName: "WeatherApiImpl");
 
   @override
-  Future<Weather> getCurrentWeather(String name) {
+  Future<Weather?> getCurrentWeather(String name) {
     return _weatherApiInterface.getCurrentWeather(name);
   }
 
   @override
-  Future<Weather> getFullInfoCurrentWeather() {
-    // TODO: implement getFullInfoCurrentWeather
-    throw UnimplementedError();
+  Future<List<Forecast>?> getForecast(String name) {
+    return _weatherApiInterface.getForecast(name);
   }
 
   @override
-  Future<List<Forecast>> getForecast(String name) {
-    return _weatherApiInterface.getForecast(name);
+  String? getErrorMessage() {
+    return WeatherApiInterface.messageError;
   }
   
 }

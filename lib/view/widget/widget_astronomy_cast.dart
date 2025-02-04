@@ -11,7 +11,7 @@ class WidgetAstronomyCast extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.9,
-      height: MediaQuery.of(context).size.height * 0.5,
+      height: MediaQuery.of(context).size.height * 0.3,
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.3),
         borderRadius: const BorderRadius.all(Radius.circular(20)),
@@ -19,12 +19,15 @@ class WidgetAstronomyCast extends StatelessWidget {
       child: Column(
         children: [
           const Padding(
-            padding: EdgeInsets.only(bottom: 8),
+            padding: EdgeInsets.symmetric(
+              vertical: 8,
+            ),
             child: Text(
               "Astronomy conditions",
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 18,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
@@ -32,7 +35,7 @@ class WidgetAstronomyCast extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.1,
+                height: MediaQuery.of(context).size.height * 0.05,
                 width: MediaQuery.of(context).size.width * 0.1,
                 child: Image.asset(
                   "$baseAstronomyUrl/sunrise.png",
@@ -52,7 +55,7 @@ class WidgetAstronomyCast extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.1,
+                height: MediaQuery.of(context).size.height * 0.05,
                 width: MediaQuery.of(context).size.width * 0.1,
                 child: Image.asset(
                   "$baseAstronomyUrl/sunset.png",
@@ -72,7 +75,7 @@ class WidgetAstronomyCast extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.1,
+                height: MediaQuery.of(context).size.height * 0.05,
                 width: MediaQuery.of(context).size.width * 0.1,
                 child: Image.asset(
                   "$baseAstronomyUrl/moonrise.png",
@@ -92,7 +95,7 @@ class WidgetAstronomyCast extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.1,
+                height: MediaQuery.of(context).size.height * 0.05,
                 width: MediaQuery.of(context).size.width * 0.1,
                 child: Image.asset(
                   "$baseAstronomyUrl/moonset.png",

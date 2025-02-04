@@ -9,6 +9,7 @@ import 'package:weather_cast/model/weather/weather_model.dart';
 import 'package:weather_cast/repository/current_weather_repository/current_weather_repository.dart';
 
 import '../../../model/converter/date_converter.dart';
+import '../../../repository/shared_preference_repository.dart';
 import '../../../service/geolocator/geolocator_service.dart';
 
 part 'current_weather_screen_event.dart';
@@ -21,8 +22,12 @@ class CurrentWeatherScreenBloc
       .get<CurrentWeatherRepository>(
           /*instanceName: "CurrentWeatherRepositoryImpl"*/);
   final GeoLocatorService _geoLocatorService = GetIt.I.get<GeoLocatorService>();
+  final SharedPreferenceRepository _sharedPreferenceRepository;
 
-  CurrentWeatherScreenBloc() : super(CurrentWeatherScreenState(weather: null)) {
+  CurrentWeatherScreenBloc(
+      {required SharedPreferenceRepository sharedPreferenceRepository})
+      : _sharedPreferenceRepository = sharedPreferenceRepository,
+        super(const CurrentWeatherScreenState(weather: null)) {
     on<InitCurrentWeatherScreenEvent>(_initCurrentWeather);
     on<SwitchLocationWeatherScreenEvent>(_switchLocationWeather);
     on<GeoLocatorCurrentWeatherScreenEvent>(_geoLocatorCurrentWeather);
@@ -31,33 +36,49 @@ class CurrentWeatherScreenBloc
 
   FutureOr<void> _initCurrentWeather(InitCurrentWeatherScreenEvent event,
       Emitter<CurrentWeatherScreenState> emit) async {
-    Position position = await _geoLocatorService.getPosition();
-    Weather result = await _currentWeatherRepository
-        .getCurrentWeather("${position.latitude},${position.longitude}");
-
     emit(state.copyWith(
-      weather: result,
-      timeOfDayEnum: TimeOfDayEnum.getCurrentTimeDay(
-        timeOfDayConverter(result.current?.lastUpdated),
-      ),
-      status: StatusCurrentWeather.init,
+      status: StatusCurrentWeather.loading,
     ));
+    Position position = await _geoLocatorService.getPosition();
+    Weather? result = await _currentWeatherRepository
+        .getCurrentWeather("${position.latitude},${position.longitude}");
+    if (result != null) {
+      emit(state.copyWith(
+        weather: result,
+        timeOfDayEnum: TimeOfDayEnum.getCurrentTimeDay(
+          timeOfDayConverter(result?.current?.lastUpdated),
+        ),
+        status: StatusCurrentWeather.init,
+      ));
+    } else {
+      emit(state.copyWith(
+        errorMessage: _currentWeatherRepository.getErrorMessage(),
+        status: StatusCurrentWeather.error,
+      ));
+    }
   }
 
   FutureOr<void> _switchLocationWeather(SwitchLocationWeatherScreenEvent event,
       Emitter<CurrentWeatherScreenState> emit) async {
-    Weather result =
+    Weather? result =
         await _currentWeatherRepository.getCurrentWeather(event.nameLocation);
-    emit(state.copyWith(
-      weather: result,
-      status: StatusCurrentWeather.success,
-    ));
+    if (result != null) {
+      emit(state.copyWith(
+        weather: result,
+        status: StatusCurrentWeather.success,
+      ));
+    } else {
+      emit(state.copyWith(
+        errorMessage: _currentWeatherRepository.getErrorMessage(),
+        status: StatusCurrentWeather.error,
+      ));
+    }
   }
 
   FutureOr<void> _updateCurrentWeather(UpdateCurrentWeatherScreenEvent event,
       Emitter<CurrentWeatherScreenState> emit) async {
     String? nameLocation = state.weather?.location?.name;
-    Weather result;
+    Weather? result;
     if (nameLocation != null) {
       result = await _currentWeatherRepository.getCurrentWeather(nameLocation);
     } else {
@@ -65,16 +86,20 @@ class CurrentWeatherScreenBloc
       result = await _currentWeatherRepository
           .getCurrentWeather("${position.latitude},${position.longitude}");
     }
-
-    emit(state.copyWith(
-      weather: result,
-      status: StatusCurrentWeather.success,
-    ));
+    if (result != null) {
+      emit(state.copyWith(
+        weather: result,
+        status: StatusCurrentWeather.success,
+      ));
+    } else {
+      emit(state.copyWith(
+        errorMessage: _currentWeatherRepository.getErrorMessage(),
+        status: StatusCurrentWeather.error,
+      ));
+    }
   }
 
   FutureOr<void> _geoLocatorCurrentWeather(
       GeoLocatorCurrentWeatherScreenEvent event,
-      Emitter<CurrentWeatherScreenState> emit) {
-
-  }
+      Emitter<CurrentWeatherScreenState> emit) {}
 }

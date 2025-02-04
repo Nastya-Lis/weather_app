@@ -1,6 +1,5 @@
-
-
 import 'package:get_it/get_it.dart';
+import 'package:weather_cast/repository/shared_preference_repository.dart';
 
 import '../repository/current_weather_repository/current_weather_repository.dart';
 import '../repository/current_weather_repository/current_weather_repository_impl.dart';
@@ -8,7 +7,6 @@ import '../service/api/dio_service.dart';
 import '../service/api/weather_api/weather_api.dart';
 import '../service/api/weather_api/weather_api_impl.dart';
 import '../service/geolocator/geolocator_service.dart';
-import '../service/notification/weather_notification.dart';
 
 class AppDependencies {
   static final AppDependencies _instance = AppDependencies._();
@@ -25,17 +23,19 @@ class AppDependencies {
     getIt.registerLazySingleton<WeatherApiInterface>(() => WeatherApiImpl(),
         instanceName: "WeatherApiImpl");
 
-    getIt.registerLazySingleton<GeoLocatorService>(() => GeoLocatorService(),
-      /*instanceName: "GeoLocatorService"*/);
+    getIt.registerLazySingleton<GeoLocatorService>(
+      () => GeoLocatorService(),
+    );
 
-    getIt.registerLazySingleton<WeatherNotification>(() => WeatherNotification(),
-      /*instanceName: "GeoLocatorService"*/);
+    getIt.registerSingleton<SharedPreferenceRepository>(
+      SharedPreferenceRepository(),
+    );
 
     getIt.registerLazySingleton<CurrentWeatherRepository>(
-          () => CurrentWeatherRepositoryImpl(),
-      /* instanceName: "CurrentWeatherRepositoryImpl"*/);
+      () =>
+          CurrentWeatherRepositoryImpl(),
+    );
 
-    /*getIt.registerLazySingleton<DioMethods>(() => DioMethodsImpl(),
-        instanceName: "DioMethods");*/
+    GetIt.I.get<SharedPreferenceRepository>().init();
   }
 }

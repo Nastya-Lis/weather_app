@@ -11,28 +11,38 @@ class WeatherApiImpl extends WeatherApiInterface {
       GetIt.I.get<NetworkConnector>(instanceName: "NetworkConnector");
 
   @override
-  Future<Weather> getCurrentWeather(String name) async {
-    Response response = await networkService.dio.get(
-      "/current.json",
-      queryParameters: {"q": name},
-    );
-    dynamic result = response.data;
-    return Weather.fromJson(result);
+  Future<Weather?> getCurrentWeather(String name) async {
+    try {
+      Response response = await networkService.dio.get(
+        "/current.json",
+        queryParameters: {"q": name},
+      );
+      dynamic result = response.data;
+      return Weather.fromJson(result);
+    } on DioException catch (e) {
+      WeatherApiInterface.messageError = DioErrorUtil.handleError(e);
+      return null;
+    }
   }
 
   @override
-  Future<List<Forecast>> getForecast(String name) async {
-    List<Forecast> result = [];
-    Response response = await networkService.dio.get(
-      "/forecast.json",
-      queryParameters: {"days": 7, "q": name},
-    );
-    var fullResult = response.data as Map<String, dynamic>;
-    Map<String, dynamic> forecast = fullResult["forecast"];
-    List<dynamic> cast = forecast["forecastday"];
-    for (var e in cast) {
-      result.add(Forecast.fromJson(e));
+  Future<List<Forecast>?> getForecast(String name) async {
+    try {
+      List<Forecast> result = [];
+      Response response = await networkService.dio.get(
+        "/forecast.json",
+        queryParameters: {"days": 7, "q": name},
+      );
+      var fullResult = response.data as Map<String, dynamic>;
+      Map<String, dynamic> forecast = fullResult["forecast"];
+      List<dynamic> cast = forecast["forecastday"];
+      for (var e in cast) {
+        result.add(Forecast.fromJson(e));
+      }
+      return result;
+    } on DioException catch (e) {
+      WeatherApiInterface.messageError = DioErrorUtil.handleError(e);
+      return null;
     }
-    return result;
   }
 }

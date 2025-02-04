@@ -8,6 +8,11 @@ class InitDropDownButtonEvent extends DropDownButtonEvent {
   InitDropDownButtonEvent(this.nameLocalePosition);
 }
 
+class CurrentLocationDropDownButtonEvent extends DropDownButtonEvent {
+
+  CurrentLocationDropDownButtonEvent();
+}
+
 class SwitchLocationDropDownButtonEvent extends DropDownButtonEvent {
   final String? newLocalePosition;
 

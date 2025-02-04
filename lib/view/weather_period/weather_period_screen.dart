@@ -13,7 +13,6 @@ class WeatherPeriodScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<WeatherPeriodScreenBloc, WeatherPeriodScreenState>(
       listener: (context, state) {
-        // TODO: implement listener
       },
       builder: (context, state) {
         return Container(
@@ -39,7 +38,7 @@ class WeatherPeriodScreen extends StatelessWidget {
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
-                          context.go(
+                          context.push(
                             AppRoutes.infoWeatherScreen.path,
                             extra: state.forecast?[index],
                           );

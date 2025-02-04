@@ -19,7 +19,27 @@ class NetworkConnector {
 
     _dio.interceptors.add(InterceptorsWrapper(
         onError: (DioException exception, ErrorInterceptorHandler handler) {
-          handler.next(exception);
-        }));
+      handler.next(exception);
+    }));
+  }
+}
+
+class DioErrorUtil {
+  static String handleError(DioException error) {
+    String errorDescription = '';
+    switch (error.type) {
+      case DioExceptionType.connectionTimeout:
+        errorDescription = 'Connection timeout has expired';
+        break;
+      case DioExceptionType.cancel:
+        errorDescription = 'The request was canceled';
+        break;
+      case DioExceptionType.connectionError:
+        errorDescription = 'Connection error';
+        break;
+      default:
+        errorDescription = 'Unknown error';
+    }
+    return errorDescription;
   }
 }

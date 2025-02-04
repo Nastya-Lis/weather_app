@@ -20,9 +20,6 @@ class CurrentWeather {
   final double? windKph;
   @JsonKey(name: "wind_degree")
   final int? windDegree;
-
-  /*@JsonKey(name: "wind_dir")
-  final String? windDir;*/
   @JsonKey(name: "pressure_mb")
   final double? pressureMb;
   @JsonKey(name: "precip_mm")

@@ -7,7 +7,6 @@ part 'weather_model.g.dart';
 @JsonSerializable()
 class Weather {
   final Location? location;
-  //final static final long serialVersionUID = -5475354829602088755L;
   final CurrentWeather? current;
 
   Weather(

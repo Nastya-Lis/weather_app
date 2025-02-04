@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:weather_cast/model/forecast/forecast.dart';
 import 'package:weather_cast/view/widget/widget_astronomy_cast.dart';
 
 import '../../model/converter/date_converter.dart';
+import '../../model/time_of_day.dart';
 import '../widget/widget_condition_params/widget_condition_param.dart';
 
 class DetailsWeatherCastScreen extends StatelessWidget {
@@ -14,11 +16,27 @@ class DetailsWeatherCastScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.blue,
+        backgroundColor:
+            TimeOfDayEnum.getCurrentTimeDay(DateTime.now().hour).color,
         body: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
             children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        context.pop();
+                      },
+                      icon: const Icon(Icons.arrow_back_rounded),
+                    ),
+                  ],
+                ),
+              ),
               Align(
                 alignment: Alignment.center,
                 child: Padding(
@@ -76,7 +94,10 @@ class DetailsWeatherCastScreen extends StatelessWidget {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      backgroundColor: Colors.indigo,
+                                      backgroundColor:
+                                          TimeOfDayEnum.getCurrentTimeDay(
+                                                  DateTime.now().hour)
+                                              .color,
                                       title: const Text(
                                         "Full Forecast",
                                         style: TextStyle(color: Colors.white),
@@ -100,7 +121,8 @@ class DetailsWeatherCastScreen extends StatelessWidget {
                                       actions: [
                                         TextButton(
                                           onPressed: () {
-                                            Navigator.of(context).pop();
+                                            //Navigator.of(context).pop();
+                                            context.pop();
                                           },
                                           child: const Text(
                                             "Close",
