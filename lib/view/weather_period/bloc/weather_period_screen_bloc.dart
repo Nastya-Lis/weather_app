@@ -43,6 +43,7 @@ class WeatherPeriodScreenBloc
       Emitter<WeatherPeriodScreenState> emit) async {
     List<Forecast>? result =
         await _currentWeatherRepository.getForecast(event.location);
+    _sharedPreferenceRepository.setLocationName(event.location);
     emit(state.copyWith(
       forecast: result,
       status: StatusForecast.success,

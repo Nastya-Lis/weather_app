@@ -18,9 +18,8 @@ part 'current_weather_screen_state.dart';
 
 class CurrentWeatherScreenBloc
     extends Bloc<CurrentWeatherScreenEvent, CurrentWeatherScreenState> {
-  final CurrentWeatherRepository _currentWeatherRepository = GetIt.I
-      .get<CurrentWeatherRepository>(
-          /*instanceName: "CurrentWeatherRepositoryImpl"*/);
+  final CurrentWeatherRepository _currentWeatherRepository =
+      GetIt.I.get<CurrentWeatherRepository>();
   final GeoLocatorService _geoLocatorService = GetIt.I.get<GeoLocatorService>();
   final SharedPreferenceRepository _sharedPreferenceRepository;
 
@@ -43,10 +42,11 @@ class CurrentWeatherScreenBloc
     Weather? result = await _currentWeatherRepository
         .getCurrentWeather("${position.latitude},${position.longitude}");
     if (result != null) {
+      _sharedPreferenceRepository.setLocationName(result.location?.name ?? "");
       emit(state.copyWith(
         weather: result,
         timeOfDayEnum: TimeOfDayEnum.getCurrentTimeDay(
-          timeOfDayConverter(result?.current?.lastUpdated),
+          timeOfDayConverter(result.current?.lastUpdated),
         ),
         status: StatusCurrentWeather.init,
       ));
